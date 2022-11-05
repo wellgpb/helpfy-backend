@@ -1,11 +1,13 @@
-FROM eclipse-temurin:17-jdk-focal
+FROM maven:3.6.0-jdk-11-slim
 
 WORKDIR /app
- 
-COPY .mvn/ .mvn
-COPY mvnw pom.xml ./
-RUN ./mvnw dependency:go-offline
- 
-COPY src ./src
- 
-CMD ["./mvnw", "spring-boot:run"]
+
+ADD pom.xml /app
+
+RUN ["/usr/local/bin/mvn-entrypoint.sh", "mvn", "verify", "clean", "--fail-never"]
+
+ADD . /app
+
+RUN ["mvn", "clean", "package"]
+
+CMD java -jar $(ls ./target/*.jar)
