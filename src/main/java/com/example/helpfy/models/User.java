@@ -2,10 +2,7 @@ package com.example.helpfy.models;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @AllArgsConstructor @NoArgsConstructor
 @Getter @Setter
@@ -17,6 +14,7 @@ public class User {
     @GeneratedValue
     @EqualsAndHashCode.Include
     private Long id;
+    @Column(unique = true)
     private String email;
     private String password;
     private String name;
