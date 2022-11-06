@@ -10,3 +10,7 @@ spring:
   sql:
     init:
       mode: always
+  web:
+    resources:
+      static-locations[0]: file:src/main/resources/static/
+      static-locations[1]: classpath:/static/
