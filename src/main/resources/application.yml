@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: ${JDBC_DATABASE_URL}
-    username: ${JDBC_DATABASE_USERNAME}
-    password: ${JDBC_DATABASE_PASSWORD}
+    url: ${JDBC_DATABASE_URL:jdbc:postgresql://localhost:5432/postgres}
+    username: ${JDBC_DATABASE_USERNAME:postgres}
+    password: ${JDBC_DATABASE_PASSWORD:postgres}
   jpa:
     show-sql: true
     hibernate:
@@ -10,3 +10,8 @@ spring:
   sql:
     init:
       mode: always
+  mvc:
+    static-path-pattern: /pictures/**
+  web:
+    resources:
+      static-locations: file:pictures/
