@@ -14,7 +14,7 @@ import java.util.Set;
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-@Table(name = "tb_question")
+@Table(name = "tb_questions")
 public class Question {
     @Id
     @GeneratedValue

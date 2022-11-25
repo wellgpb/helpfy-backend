@@ -9,7 +9,7 @@ import java.util.Date;
 @Getter @Setter
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Entity @Table(name = "tb_comment")
+@Entity @Table(name = "tb_comments")
 public class Comment {
     @Id
     @GeneratedValue

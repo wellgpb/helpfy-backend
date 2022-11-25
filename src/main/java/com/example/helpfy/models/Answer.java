@@ -12,7 +12,7 @@ import java.util.List;
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-@Table(name = "tb_answer")
+@Table(name = "tb_answers")
 public class Answer {
     @Id
     @GeneratedValue
