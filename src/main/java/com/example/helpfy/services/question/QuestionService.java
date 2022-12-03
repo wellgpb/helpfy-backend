@@ -8,4 +8,6 @@ public interface QuestionService {
     Question saveQuestion(Question question, User user);
     Question updateQuestion(Long id, Question newQuestion);
     void deleteQuestion(Long id);
+    Question likeQuestion(Long questionId, Long userId);
+    Question dislikeQuestion(Long questionId, Long userId);
 }

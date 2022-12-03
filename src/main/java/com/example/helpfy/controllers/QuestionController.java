@@ -53,4 +53,20 @@ public class QuestionController {
         questionService.deleteQuestion(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PostMapping("/{questionId}/users/{userId}/like")
+    public ResponseEntity<QuestionResponse> likeQuestion(@PathVariable Long questionId, @PathVariable Long userId) {
+        userService.getUserById(userId);
+        var questionLiked = questionService.likeQuestion(questionId, userId);
+        var questionResponse = questionMapper.fromQuestionToResponse(questionLiked);
+        return new ResponseEntity<>(questionResponse, HttpStatus.OK);
+    }
+
+    @PostMapping("/{questionId}/users/{userId}/dislike")
+    public ResponseEntity<QuestionResponse> dislikeQuestion(@PathVariable Long questionId, @PathVariable Long userId) {
+        userService.getUserById(userId);
+        var questionLiked = questionService.dislikeQuestion(questionId, userId);
+        var questionResponse = questionMapper.fromQuestionToResponse(questionLiked);
+        return new ResponseEntity<>(questionResponse, HttpStatus.OK);
+    }
 }

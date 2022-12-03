@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class QuestionServiceImpl implements QuestionService {
@@ -32,6 +33,7 @@ public class QuestionServiceImpl implements QuestionService {
         return questionRepository.save(question);
     }
 
+    @Transactional
     @Override
     public Question updateQuestion(Long id, Question newQuestion) {
         var question = getQuestionById(id);
@@ -60,5 +62,39 @@ public class QuestionServiceImpl implements QuestionService {
     public void deleteQuestion(Long id) {
         var question = getQuestionById(id);
         questionRepository.delete(question);
+    }
+
+    @Override
+    public Question likeQuestion(Long questionId, Long userId) {
+        var question = getQuestionById(questionId);
+
+        var dislikes = question.getNumberDislikes();
+        var likes = question.getNumberLikes();
+        dislikes.remove(userId);
+        likes.add(userId);
+
+        updateQuestionVotes(question, likes, dislikes);
+
+        return question;
+    }
+
+    @Override
+    public Question dislikeQuestion(Long questionId, Long userId) {
+        var question = getQuestionById(questionId);
+
+        var dislikes = question.getNumberDislikes();
+        var likes = question.getNumberLikes();
+        likes.remove(userId);
+        dislikes.add(userId);
+
+        updateQuestionVotes(question, likes, dislikes);
+
+        return question;
+    }
+
+    private void updateQuestionVotes(Question question, Set<Long> likes, Set<Long> dislikes) {
+        question.setNumberLikes(likes);
+        question.setNumberDislikes(dislikes);
+        questionRepository.save(question);
     }
 }
