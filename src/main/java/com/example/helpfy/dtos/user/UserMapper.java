@@ -10,7 +10,6 @@ public class UserMapper {
         return UserResponse.builder()
                 .id(user.getId())
                 .email(user.getEmail())
-                .password(user.getPassword())
                 .name(user.getName())
                 .lastName(user.getLastName())
                 .avatarLink(user.getAvatarLink())
@@ -24,6 +23,15 @@ public class UserMapper {
                 .name(userRequest.getName())
                 .lastName(userRequest.getLastName())
                 .avatarLink(userRequest.getAvatarLink())
+                .build();
+    }
+
+    public User toUserPUT(UserRequestPUT userRequestPUT) {
+        return User.builder()
+                .email(userRequestPUT.getEmail())
+                .name(userRequestPUT.getName())
+                .lastName(userRequestPUT.getLastName())
+                .avatarLink(userRequestPUT.getAvatarLink())
                 .build();
     }
 }

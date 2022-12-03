@@ -1,12 +1,11 @@
 package com.example.helpfy.dtos.user;
 
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 
+@Data
 @Builder
-@Getter
-public class UserResponse {
-    private Long id;
+public class UserRequestPUT {
     private String email;
     private String name;
     private String lastName;
