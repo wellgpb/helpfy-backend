@@ -15,3 +15,6 @@ spring:
   web:
     resources:
       static-locations: file:pictures/
+server:
+  error:
+    include-message: always
