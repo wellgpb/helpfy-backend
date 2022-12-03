@@ -8,6 +8,7 @@ import com.example.helpfy.repositories.QuestionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -90,6 +91,11 @@ public class QuestionServiceImpl implements QuestionService {
         updateQuestionVotes(question, likes, dislikes);
 
         return question;
+    }
+
+    @Override
+    public List<Question> getQuestionsByAuthor(User user) {
+        return questionRepository.findQuestionsByAuthor(user);
     }
 
     private void updateQuestionVotes(Question question, Set<Long> likes, Set<Long> dislikes) {

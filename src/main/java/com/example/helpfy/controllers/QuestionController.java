@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/questions")
@@ -23,6 +25,18 @@ public class QuestionController {
         this.questionService = questionService;
         this.userService = userService;
         this.questionMapper = questionMapper;
+    }
+
+    @GetMapping("users/{userId}")
+    public ResponseEntity<List<QuestionResponse>> getQuestionsByAuthor(@PathVariable Long userId) {
+        var user = userService.getUserById(userId);
+        var questions = questionService.getQuestionsByAuthor(user);
+
+        var questionsResponse = questions.stream()
+                .map(questionMapper::fromQuestionToResponse)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(questionsResponse, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
