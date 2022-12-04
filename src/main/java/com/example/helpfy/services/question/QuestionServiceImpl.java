@@ -74,7 +74,7 @@ public class QuestionServiceImpl implements QuestionService {
         dislikes.remove(userId);
         likes.add(userId);
 
-        updateQuestionVotes(question, likes, dislikes);
+        questionRepository.save(question);
 
         return question;
     }
@@ -88,7 +88,7 @@ public class QuestionServiceImpl implements QuestionService {
         likes.remove(userId);
         dislikes.add(userId);
 
-        updateQuestionVotes(question, likes, dislikes);
+        questionRepository.save(question);
 
         return question;
     }
@@ -96,11 +96,5 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public List<Question> getQuestionsByAuthor(User user) {
         return questionRepository.findQuestionsByAuthor(user);
-    }
-
-    private void updateQuestionVotes(Question question, Set<Long> likes, Set<Long> dislikes) {
-        question.setNumberLikes(likes);
-        question.setNumberDislikes(dislikes);
-        questionRepository.save(question);
     }
 }
