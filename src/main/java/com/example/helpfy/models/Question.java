@@ -34,9 +34,9 @@ public class Question {
     private Set<String> tags;
     private String title;
     @ElementCollection
-    private Set<Long> numberLikes;
+    private Set<Long> idsFromUsersLikes;
     @ElementCollection
-    private Set<Long> numberDislikes;
+    private Set<Long> idsFromUsersDislikes;
     private Date createdAt;
     private boolean answered;
 }

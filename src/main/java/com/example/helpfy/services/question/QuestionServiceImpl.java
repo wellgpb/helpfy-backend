@@ -69,8 +69,8 @@ public class QuestionServiceImpl implements QuestionService {
     public Question likeQuestion(Long questionId, Long userId) {
         var question = getQuestionById(questionId);
 
-        var dislikes = question.getNumberDislikes();
-        var likes = question.getNumberLikes();
+        var dislikes = question.getIdsFromUsersDislikes();
+        var likes = question.getIdsFromUsersLikes();
         dislikes.remove(userId);
         likes.add(userId);
 
@@ -83,8 +83,8 @@ public class QuestionServiceImpl implements QuestionService {
     public Question dislikeQuestion(Long questionId, Long userId) {
         var question = getQuestionById(questionId);
 
-        var dislikes = question.getNumberDislikes();
-        var likes = question.getNumberLikes();
+        var dislikes = question.getIdsFromUsersDislikes();
+        var likes = question.getIdsFromUsersLikes();
         likes.remove(userId);
         dislikes.add(userId);
 
