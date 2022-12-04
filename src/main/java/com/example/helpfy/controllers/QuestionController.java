@@ -27,7 +27,7 @@ public class QuestionController {
         this.questionMapper = questionMapper;
     }
 
-    @GetMapping("users/{userId}")
+    @GetMapping("/users/{userId}")
     public ResponseEntity<List<QuestionResponse>> getQuestionsByAuthor(@PathVariable Long userId) {
         var user = userService.getUserById(userId);
         var questions = questionService.getQuestionsByAuthor(user);
