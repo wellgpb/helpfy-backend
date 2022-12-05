@@ -64,6 +64,7 @@ public class QuestionServiceImpl implements QuestionService {
         questionRepository.delete(question);
     }
 
+    @Transactional
     @Override
     public Question likeQuestion(Long questionId, Long userId) {
         var question = getQuestionById(questionId);
@@ -77,6 +78,7 @@ public class QuestionServiceImpl implements QuestionService {
         return question;
     }
 
+    @Transactional
     @Override
     public Question dislikeQuestion(Long questionId, Long userId) {
         var question = getQuestionById(questionId);
@@ -104,6 +106,7 @@ public class QuestionServiceImpl implements QuestionService {
         return questionRepository.findQuestionsByAuthor(user);
     }
 
+    @Transactional
     @Override
     public Question toggleAnsweredStatus(Long questionId) {
         var question = getQuestionById(questionId);
