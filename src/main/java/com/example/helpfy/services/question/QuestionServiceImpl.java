@@ -71,8 +71,7 @@ public class QuestionServiceImpl implements QuestionService {
 
         var dislikes = question.getIdsFromUsersDislikes();
         var likes = question.getIdsFromUsersLikes();
-        dislikes.remove(userId);
-        likes.add(userId);
+        this.updateQuestionLikesAndDislikes(userId, dislikes, likes);
 
         questionRepository.save(question);
 
@@ -85,12 +84,20 @@ public class QuestionServiceImpl implements QuestionService {
 
         var dislikes = question.getIdsFromUsersDislikes();
         var likes = question.getIdsFromUsersLikes();
-        likes.remove(userId);
-        dislikes.add(userId);
+        this.updateQuestionLikesAndDislikes(userId, likes, dislikes);
 
         questionRepository.save(question);
 
         return question;
+    }
+
+    private void updateQuestionLikesAndDislikes(Long userId, Set<Long> oldState, Set<Long> newState) {
+        oldState.remove(userId);
+        if (newState.contains(userId)) {
+            newState.remove(userId);
+        } else {
+            newState.add(userId);
+        }
     }
 
     @Override
