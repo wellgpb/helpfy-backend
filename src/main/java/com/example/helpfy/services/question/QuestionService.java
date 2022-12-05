@@ -13,4 +13,5 @@ public interface QuestionService {
     Question likeQuestion(Long questionId, Long userId);
     Question dislikeQuestion(Long questionId, Long userId);
     List<Question> getQuestionsByAuthor(User user);
+    Question toggleAnsweredStatus(Long questionId);
 }

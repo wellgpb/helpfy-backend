@@ -83,4 +83,11 @@ public class QuestionController {
         var questionResponse = questionMapper.fromQuestionToResponse(questionLiked);
         return new ResponseEntity<>(questionResponse, HttpStatus.OK);
     }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<QuestionResponse> toggleAnsweredStatus(@PathVariable Long id) {
+        var questionUpdated = questionService.toggleAnsweredStatus(id);
+        var questionResponse = questionMapper.fromQuestionToResponse(questionUpdated);
+        return new ResponseEntity<>(questionResponse, HttpStatus.OK);
+    }
 }

@@ -52,7 +52,6 @@ public class QuestionMapper {
                 .title(questionRequestPUT.getTitle())
                 .body(questionRequestPUT.getBody())
                 .tags(questionRequestPUT.getTags())
-                .answered(questionRequestPUT.isAnswered())
                 .build();
     }
 

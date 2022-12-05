@@ -11,5 +11,4 @@ public class QuestionRequestPUT {
     private String body;
     private String title;
     private Set<String> tags;
-    private boolean answered;
 }

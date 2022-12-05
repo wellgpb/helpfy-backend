@@ -14,6 +14,5 @@ public class QuestionRequest {
     @NotEmpty(message = "O título da questão não pode ser vazio.")
     private String title;
     private Set<String> tags;
-    private boolean answered;
 
 }

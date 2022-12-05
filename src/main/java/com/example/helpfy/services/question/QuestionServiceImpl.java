@@ -54,7 +54,6 @@ public class QuestionServiceImpl implements QuestionService {
         if (newQuestion.getTags() != null) {
             question.setTags(newQuestion.getTags());
         }
-        question.setAnswered(newQuestion.isAnswered());
 
         return question;
     }
@@ -103,5 +102,16 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public List<Question> getQuestionsByAuthor(User user) {
         return questionRepository.findQuestionsByAuthor(user);
+    }
+
+    @Override
+    public Question toggleAnsweredStatus(Long questionId) {
+        var question = getQuestionById(questionId);
+        boolean questionStatus = question.isAnswered();
+
+        question.setAnswered(!questionStatus);
+        questionRepository.save(question);
+
+        return question;
     }
 }
