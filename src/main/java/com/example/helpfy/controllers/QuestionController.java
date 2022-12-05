@@ -54,7 +54,7 @@ public class QuestionController {
         return new ResponseEntity<>(questionResponse, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<QuestionResponse> updateQuestion(@PathVariable Long id, @RequestBody @Valid QuestionRequestPUT questionRequest) {
         var question = questionMapper.toQuestionPUT(questionRequest);
         var updatedQuestion = questionService.updateQuestion(id, question);
@@ -68,7 +68,7 @@ public class QuestionController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/{questionId}/users/{userId}/like")
+    @PatchMapping("/{questionId}/users/{userId}/like")
     public ResponseEntity<QuestionResponse> likeQuestion(@PathVariable Long questionId, @PathVariable Long userId) {
         userService.getUserById(userId);
         var questionLiked = questionService.likeQuestion(questionId, userId);
@@ -76,7 +76,7 @@ public class QuestionController {
         return new ResponseEntity<>(questionResponse, HttpStatus.OK);
     }
 
-    @PostMapping("/{questionId}/users/{userId}/dislike")
+    @PatchMapping("/{questionId}/users/{userId}/dislike")
     public ResponseEntity<QuestionResponse> dislikeQuestion(@PathVariable Long questionId, @PathVariable Long userId) {
         userService.getUserById(userId);
         var questionLiked = questionService.dislikeQuestion(questionId, userId);
@@ -84,7 +84,7 @@ public class QuestionController {
         return new ResponseEntity<>(questionResponse, HttpStatus.OK);
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping("/{id}/answered")
     public ResponseEntity<QuestionResponse> toggleAnsweredStatus(@PathVariable Long id) {
         var questionUpdated = questionService.toggleAnsweredStatus(id);
         var questionResponse = questionMapper.fromQuestionToResponse(questionUpdated);
