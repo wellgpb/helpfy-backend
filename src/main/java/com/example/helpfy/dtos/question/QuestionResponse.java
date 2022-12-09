@@ -1,9 +1,9 @@
 package com.example.helpfy.dtos.question;
 
+import com.example.helpfy.dtos.answer.AnswerResponse;
 import com.example.helpfy.dtos.user.UserResponse;
 import com.example.helpfy.models.Answer;
 import com.example.helpfy.models.Comment;
-import com.example.helpfy.models.User;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -17,7 +17,7 @@ public class QuestionResponse {
     private Long id;
     private String body;
     private UserResponse author;
-    private List<Answer> answers;
+    private List<AnswerResponse> answers;
     private List<Comment> comments;
     private Set<String> tags;
     private String title;
