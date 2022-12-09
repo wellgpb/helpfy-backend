@@ -13,4 +13,12 @@ public interface AnswerService {
     void deleteAnswerById(Long answerId);
 
     Answer saveAnswer(Answer answer, User user, Long questionId);
+
+    Answer updateAnswer(Answer answer, Long answerId);
+
+    Answer likeAnswer(Long answerId, Long userId);
+
+    Answer dislikeAnswer(Long answerId, Long userId);
+
+    Answer toggleSolutionStatus(Long id);
 }

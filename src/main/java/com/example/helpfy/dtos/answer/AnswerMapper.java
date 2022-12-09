@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 
 @Component
 public class AnswerMapper {
@@ -23,8 +24,8 @@ public class AnswerMapper {
                 .postDate(answer.getPostDate())
                 .id(answer.getId())
                 .comments(answer.getComments())
-                .numberLikes(answer.getNumberLikes())
-                .numberDislikes(answer.getNumberDislikes())
+                .numberLikes(answer.getIdsFromUsersLikes().size())
+                .numberDislikes(answer.getIdsFromUsersDislikes().size())
                 .solution(answer.isSolution())
                 .author(author)
                 .build();
@@ -35,9 +36,15 @@ public class AnswerMapper {
                 .comments(new ArrayList<>())
                 .body(answerRequest.getBody())
                 .postDate(new Date())
-                .numberLikes(0)
-                .numberDislikes(0)
+                .idsFromUsersLikes(new HashSet<>())
+                .idsFromUsersDislikes(new HashSet<>())
                 .solution(false)
+                .build();
+    }
+
+    public Answer toAnswerPUT(AnswerRequest answerRequest) {
+        return Answer.builder()
+                .body(answerRequest.getBody())
                 .build();
     }
 }

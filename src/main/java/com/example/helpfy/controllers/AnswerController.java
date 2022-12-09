@@ -3,6 +3,7 @@ package com.example.helpfy.controllers;
 import com.example.helpfy.dtos.answer.AnswerMapper;
 import com.example.helpfy.dtos.answer.AnswerRequest;
 import com.example.helpfy.dtos.answer.AnswerResponse;
+import com.example.helpfy.dtos.question.QuestionResponse;
 import com.example.helpfy.services.answer.AnswerService;
 import com.example.helpfy.services.user.UserService;
 import org.springframework.http.HttpStatus;
@@ -31,7 +32,7 @@ public class AnswerController {
         var user = userService.getUserById(id);
         var answers = answerService.getUserAnswers(user);
         var answersResponse = answers.stream()
-                .map(a -> answerMapper.fromAnswer(a))
+                .map(answerMapper::fromAnswer)
                 .collect(Collectors.toList());
         return new ResponseEntity<>(answersResponse, HttpStatus.OK);
     }
@@ -53,10 +54,41 @@ public class AnswerController {
         return new ResponseEntity<>(answerResponse, HttpStatus.CREATED);
     }
 
+    @PatchMapping("/{answerId}")
+    public ResponseEntity<AnswerResponse> updateAnswer(@RequestBody @Valid AnswerRequest answerRequest, @PathVariable Long answerId) {
+        var newAnswer = answerMapper.toAnswerPUT(answerRequest);
+        var updatedAnswer = answerService.updateAnswer(newAnswer, answerId);
+        var answerResponse = answerMapper.fromAnswer(updatedAnswer);
+        return new ResponseEntity<>(answerResponse, HttpStatus.OK);
+    }
+
     @DeleteMapping("/{answerId}")
     public ResponseEntity<Void> deleteAnswer(@PathVariable Long answerId) {
         answerService.deleteAnswerById(answerId);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PatchMapping("/{answerId}/users/{userId}/like")
+    public ResponseEntity<AnswerResponse> likeAnswer(@PathVariable Long answerId, @PathVariable Long userId) {
+        userService.getUserById(userId);
+        var answerLiked = answerService.likeAnswer(answerId, userId);
+        var answerResponse = answerMapper.fromAnswer(answerLiked);
+        return new ResponseEntity<>(answerResponse, HttpStatus.OK);
+    }
+
+    @PatchMapping("/{answerId}/users/{userId}/dislike")
+    public ResponseEntity<AnswerResponse> dislikeAnswer(@PathVariable Long answerId, @PathVariable Long userId) {
+        userService.getUserById(userId);
+        var answerLiked = answerService.dislikeAnswer(answerId, userId);
+        var answerResponse = answerMapper.fromAnswer(answerLiked);
+        return new ResponseEntity<>(answerResponse, HttpStatus.OK);
+    }
+
+    @PatchMapping("/{id}/solution")
+    public ResponseEntity<AnswerResponse> toggleAnsweredStatus(@PathVariable Long id) {
+        var answerUpdated = answerService.toggleSolutionStatus(id);
+        var answerResponse = answerMapper.fromAnswer(answerUpdated);
+        return new ResponseEntity<>(answerResponse, HttpStatus.OK);
     }
 }
 
