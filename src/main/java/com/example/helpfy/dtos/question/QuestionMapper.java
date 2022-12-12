@@ -1,5 +1,7 @@
 package com.example.helpfy.dtos.question;
 
+import com.example.helpfy.dtos.answer.AnswerMapper;
+import com.example.helpfy.dtos.answer.AnswerResponse;
 import com.example.helpfy.dtos.user.UserMapper;
 import com.example.helpfy.models.Question;
 import org.springframework.stereotype.Component;
@@ -7,20 +9,32 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class QuestionMapper {
 
     private final UserMapper userMapper;
+    private final AnswerMapper answerMapper;
 
-    public QuestionMapper(UserMapper userMapper) {
+    public QuestionMapper(UserMapper userMapper, AnswerMapper answerMapper) {
         this.userMapper = userMapper;
+        this.answerMapper = answerMapper;
     }
 
     public QuestionResponse fromQuestionToResponse(Question question) {
+        var author = userMapper.fromUserToResponse(question.getAuthor());
+        List<AnswerResponse> answers = null;
+        if (question.getAnswers() != null) {
+            answers = question.getAnswers().stream()
+                    .map(answerMapper::fromAnswer)
+                    .collect(Collectors.toList());
+        }
+
         return QuestionResponse.builder()
                 .id(question.getId())
-                .author(userMapper.fromUserToResponse(question.getAuthor()))
+                .author(author)
                 .title(question.getTitle())
                 .body(question.getBody())
                 .tags(question.getTags())
@@ -28,7 +42,7 @@ public class QuestionMapper {
                 .numberDislikes(question.getIdsFromUsersDislikes().size())
                 .createdAt(question.getCreatedAt())
                 .answered(question.isAnswered())
-                .answers(question.getAnswers())
+                .answers(answers)
                 .comments(question.getComments())
                 .build();
     }

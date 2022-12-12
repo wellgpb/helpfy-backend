@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,8 +26,10 @@ public class Answer {
     private List<Comment> comments;
     @ManyToOne
     private User author;
-    private int numberLikes;
-    private int numberDislikes;
+    @ElementCollection
+    private Set<Long> idsFromUsersLikes;
+    @ElementCollection
+    private Set<Long> idsFromUsersDislikes;
     private Date postDate;
     private boolean solution;
 }
