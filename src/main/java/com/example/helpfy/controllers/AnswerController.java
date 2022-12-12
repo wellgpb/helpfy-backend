@@ -46,7 +46,6 @@ public class AnswerController {
 
     @PostMapping("/users/{userId}/questions/{questionId}")
     public ResponseEntity<AnswerResponse> saveAnswer(@RequestBody @Valid AnswerRequest answerRequest, @PathVariable Long userId, @PathVariable Long questionId) {
-        System.out.println("chegou");
         var user = userService.getUserById(userId);
         var answer = answerMapper.toAnswerPOST(answerRequest);
         var savedAnswer = answerService.saveAnswer(answer, user, questionId);
