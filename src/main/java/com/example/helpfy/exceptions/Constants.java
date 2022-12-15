@@ -9,7 +9,7 @@ public class Constants {
 
     public static final String ANSWER_NOT_FOUND = "Resposta não encontrada.";
 
-    public static final String COMMENT_NOT_FOUND = "Comentário não encontrada.";
+    public static final String COMMENT_NOT_FOUND = "Comentário não encontrado.";
 
 
     public static final String EMAIL_NOT_FOUND = "O email informado não foi encontrado.";

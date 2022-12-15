@@ -29,4 +29,26 @@ public class CommentController {
         CommentResponse commentResponse = commentMapper.fromComment(commentResult);
         return new ResponseEntity<>(commentResponse, HttpStatus.CREATED);
     }
+
+    @PostMapping("/questions/{questionId}/users/{userId}")
+    public  ResponseEntity<CommentResponse> addCommentQuestion(@RequestBody CommentRequest commentRequest, @PathVariable Long userId, @PathVariable     Long questionId){
+        Comment comment = commentMapper.toCommentPOST(commentRequest);
+        Comment commentResult = this.commentService.addCommentQuestion(comment, userId, questionId);
+        CommentResponse commentResponse = commentMapper.fromComment(commentResult);
+        return new ResponseEntity<>(commentResponse, HttpStatus.CREATED);
+    }
+
+    @GetMapping("{commentId}/answers/{answerId}")
+    public ResponseEntity<CommentResponse> getCommentAnswer(@PathVariable Long commentId, @PathVariable Long answerId){
+        Comment commentResult = this.commentService.getCommentAnswer(commentId, answerId);
+        CommentResponse commentResponse = commentMapper.fromComment(commentResult);
+        return new ResponseEntity<>(commentResponse, HttpStatus.OK);
+    }
+
+    @GetMapping("{commentId}/questions/{questionId}")
+    public ResponseEntity<CommentResponse> getCommentQuestion(@PathVariable Long commentId, @PathVariable   Long questionId){
+        Comment commentResult = this.commentService.getCommentQuestion(commentId, questionId);
+        CommentResponse commentResponse = commentMapper.fromComment(commentResult);
+        return new ResponseEntity<>(commentResponse, HttpStatus.OK);
+    }
 }
