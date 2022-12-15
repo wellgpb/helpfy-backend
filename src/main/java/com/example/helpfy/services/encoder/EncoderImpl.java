@@ -15,4 +15,9 @@ public class EncoderImpl implements Encoder {
     public String encode(String toHash) {
         return bCryptPasswordEncoder.encode(toHash);
     }
+
+    @Override
+    public boolean matches(String rawPassword, String encodedPassword) {
+        return bCryptPasswordEncoder.matches(rawPassword, encodedPassword);
+    }
 }
