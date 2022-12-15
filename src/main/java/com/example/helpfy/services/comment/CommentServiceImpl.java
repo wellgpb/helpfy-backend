@@ -12,13 +12,13 @@ import com.example.helpfy.repositories.QuestionRepository;
 import com.example.helpfy.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class CommentServiceImpl implements CommentService{
 
     private final CommentRepository commentRepository;
-
     private final UserRepository userRepository;
     private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
@@ -62,6 +62,15 @@ public class CommentServiceImpl implements CommentService{
         return comment;
     }
 
+    @Override
+    public List<Comment> getAllCommentsAnswer(Long answerId) {
+        Answer answer = answerRepository.findById(answerId).orElseThrow(() -> {
+            throw new NotFoundException(Constants.ANSWER_NOT_FOUND);
+        });
+
+        return answer.getComments();
+    }
+
     public Comment addCommentQuestion(Comment comment, Long userId, Long questionId) {
         User user = userRepository.findById(userId).orElseThrow(() -> {
             throw new NotFoundException(Constants.USER_NOT_FOUND);
@@ -84,7 +93,7 @@ public class CommentServiceImpl implements CommentService{
             throw new NotFoundException(Constants.COMMENT_NOT_FOUND);
         });
         Question question = questionRepository.findById(questionId).orElseThrow(() -> {
-            throw new NotFoundException(Constants.ANSWER_NOT_FOUND);
+            throw new NotFoundException(Constants.QUESTION_NOT_FOUND);
         });
 
         if (!question.getComments().contains(comment)){
@@ -92,6 +101,15 @@ public class CommentServiceImpl implements CommentService{
         }
 
         return comment;
+    }
+
+    @Override
+    public List<Comment> getAllCommentsQuestion(Long questionId) {
+        Question question = questionRepository.findById(questionId).orElseThrow(() -> {
+            throw new NotFoundException(Constants.QUESTION_NOT_FOUND);
+        });
+
+        return question.getComments();
     }
 
 }
