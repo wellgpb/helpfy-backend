@@ -1,20 +1,23 @@
 package com.example.helpfy.services.comment;
 
+import com.example.helpfy.models.Answer;
 import com.example.helpfy.models.Comment;
+import com.example.helpfy.models.Question;
+import com.example.helpfy.models.User;
 
 import java.util.List;
 
 public interface CommentService {
-    Comment addCommentAnswer(Comment comment, Long userId, Long answerId);
-    Comment getCommentAnswer(Long commentId, Long answerid);
-    List<Comment> getAllCommentsAnswer(Long answerId);
-    Comment updateCommentAnswer(Comment comment, Long commentId, Long answerId);
+    Comment addCommentAnswer(Comment comment, User user, Answer answer);
+    Comment getCommentAnswer(Long commentId, Answer answer);
+    List<Comment> getAllCommentsAnswer(Answer answer);
+    Comment updateCommentAnswer(Comment comment, Long commentId, Answer answerId);
 
-    Comment deleteCommentAnswer(Long commentId, Long answerId);
-    Comment addCommentQuestion(Comment comment, Long userId, Long questionId);
-    Comment getCommentQuestion(Long commentId, Long questionId);
+    Comment deleteCommentAnswer(Long commentId, Answer answer);
+    Comment addCommentQuestion(Comment comment, User user, Question question);
+    Comment getCommentQuestion(Long commentId, Question question);
     List<Comment> getAllCommentsQuestion(Long questionId);
-    Comment updateCommentQuestion(Comment comment, Long commentId, Long questionId);
+    Comment updateCommentQuestion(Comment comment, Long commentId,Question question);
 
-    Comment deleteCommentQuestion(Long commentId, Long questionId);
+    Comment deleteCommentQuestion(Long commentId, Question question);
 }

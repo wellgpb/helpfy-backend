@@ -10,10 +10,13 @@ import com.example.helpfy.repositories.AnswerRepository;
 import com.example.helpfy.repositories.CommentRepository;
 import com.example.helpfy.repositories.QuestionRepository;
 import com.example.helpfy.repositories.UserRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+
+import static com.example.helpfy.utils.EntitiesUtil.findById;
 
 @Service
 public class CommentServiceImpl implements CommentService {
@@ -30,15 +33,7 @@ public class CommentServiceImpl implements CommentService {
         this.answerRepository = answerRepository;
     }
 
-    public Comment addCommentAnswer(Comment comment, Long userId, Long answerId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> {
-            throw new NotFoundException(Constants.USER_NOT_FOUND);
-        });
-
-        Answer answer = answerRepository.findById(answerId).orElseThrow(() -> {
-            throw new NotFoundException(Constants.ANSWER_NOT_FOUND);
-        });
-
+    public Comment addCommentAnswer(Comment comment, User user, Answer answer) {
         comment.setAuthor(user);
         commentRepository.save(comment);
         answer.getComments().add(comment);
@@ -47,36 +42,20 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Comment getCommentAnswer(Long commentId, Long answerId) {
-        Optional<Comment> optionalComment = commentRepository.findById(commentId);
-
-        this.validateCommentAndAnswer(answerId, commentId);
-
-        Comment comment = optionalComment.get();
-
+    public Comment getCommentAnswer(Long commentId, Answer answer) {
+        Comment comment = findById(commentId, commentRepository, Constants.COMMENT_NOT_FOUND);
+        checkIfEntityHasComment(answer.getComments(), comment);
         return comment;
     }
 
     @Override
-    public List<Comment> getAllCommentsAnswer(Long answerId) {
-        Answer answer = answerRepository.findById(answerId).orElseThrow(() -> {
-            throw new NotFoundException(Constants.ANSWER_NOT_FOUND);
-        });
-
+    public List<Comment> getAllCommentsAnswer(Answer answer) {
         return answer.getComments();
     }
 
     @Override
-    public Comment updateCommentAnswer(Comment comment, Long commentId, Long answerId) {
-        Optional<Comment> optionalComment = commentRepository.findById(commentId);
-
-        Optional<Answer> optionalAnswer = answerRepository.findById(answerId);
-
-        this.validateCommentAndAnswer(answerId, commentId);
-
-        Comment originalComment = optionalComment.get();
-        Answer answer = optionalAnswer.get();
-
+    public Comment updateCommentAnswer(Comment comment, Long commentId, Answer answer) {
+        Comment originalComment = findById(commentId, commentRepository, Constants.COMMENT_NOT_FOUND);
         originalComment.setBody(comment.getBody());
         commentRepository.save(originalComment);
         answerRepository.save(answer);
@@ -84,30 +63,15 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Comment deleteCommentAnswer(Long commentId, Long answerId) {
-        Optional<Comment> optionalComment = commentRepository.findById(commentId);
-
-        Optional<Answer> optionalAnswer = answerRepository.findById(answerId);
-
-        this.validateCommentAndAnswer(answerId, commentId);
-
-        Comment comment = optionalComment.get();
-        Answer answer = optionalAnswer.get();
-
+    public Comment deleteCommentAnswer(Long commentId, Answer answer) {
+        Comment comment = findById(commentId, commentRepository, Constants.COMMENT_NOT_FOUND);
         answer.getComments().remove(comment);
         answerRepository.save(answer);
         commentRepository.delete(comment);
         return comment;
     }
 
-    public Comment addCommentQuestion(Comment comment, Long userId, Long questionId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> {
-            throw new NotFoundException(Constants.USER_NOT_FOUND);
-        });
-        Question question = questionRepository.findById(questionId).orElseThrow(() -> {
-            throw new NotFoundException(Constants.QUESTION_NOT_FOUND);
-        });
-
+    public Comment addCommentQuestion(Comment comment, User user, Question question) {
         comment.setAuthor(user);
         commentRepository.save(comment);
         question.getComments().add(comment);
@@ -117,13 +81,9 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Comment getCommentQuestion(Long commentId, Long questionId) {
-        Optional<Comment> optionalComment = commentRepository.findById(commentId);
-
-        this.validateCommentAndQuestion(questionId, commentId);
-
-        Comment comment = optionalComment.get();
-
+    public Comment getCommentQuestion(Long commentId, Question question) {
+        Comment comment = findById(commentId, commentRepository, Constants.COMMENT_NOT_FOUND);
+        this.checkIfEntityHasComment(question.getComments(), comment);
         return comment;
     }
 
@@ -137,16 +97,8 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Comment updateCommentQuestion(Comment comment, Long commentId, Long questionId) {
-        Optional<Comment> optionalComment = commentRepository.findById(commentId);
-
-        Optional<Question> optionalQuestion = questionRepository.findById(questionId);
-
-        this.validateCommentAndQuestion(questionId, commentId);
-
-        Comment originalComment = optionalComment.get();
-        Question question = optionalQuestion.get();
-
+    public Comment updateCommentQuestion(Comment comment, Long commentId, Question question) {
+        Comment originalComment = findById(commentId, commentRepository, Constants.COMMENT_NOT_FOUND);
         originalComment.setBody(comment.getBody());
         commentRepository.save(originalComment);
         questionRepository.save(question);
@@ -154,43 +106,17 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Comment deleteCommentQuestion(Long commentId, Long questionId) {
-        Optional<Comment> optionalComment = commentRepository.findById(commentId);
-
-        Optional<Question> optionalQuestion = questionRepository.findById(questionId);
-
-        this.validateCommentAndQuestion(questionId, commentId);
-
-        Comment comment = optionalComment.get();
-        Question question = optionalQuestion.get();
-
+    public Comment deleteCommentQuestion(Long commentId, Question question) {
+        Comment comment = findById(commentId, commentRepository, Constants.COMMENT_NOT_FOUND);
         question.getComments().remove(comment);
         questionRepository.save(question);
         commentRepository.delete(comment);
         return comment;
     }
 
-    private void validateCommentAndQuestion(Long questionId, Long commentId) {
-        Question question = questionRepository.findById(questionId).orElseThrow(() -> {
-            throw new NotFoundException(Constants.QUESTION_NOT_FOUND);
-        });
-        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> {
+    private void checkIfEntityHasComment(List<Comment> comments, Comment comment) {
+        if (!comments.contains(comment)) {
             throw new NotFoundException(Constants.COMMENT_NOT_FOUND);
-        });
-        if (!question.getComments().contains(comment)) {
-            throw new NotFoundException(Constants.COMMENT_NOT_FOUND_IN_QUESTION);
-        }
-    }
-
-    private void validateCommentAndAnswer(Long answerId, Long commentId) {
-        Answer answer = answerRepository.findById(answerId).orElseThrow(() -> {
-            throw new NotFoundException(Constants.QUESTION_NOT_FOUND);
-        });
-        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> {
-            throw new NotFoundException(Constants.COMMENT_NOT_FOUND);
-        });
-        if (!answer.getComments().contains(comment)) {
-            throw new NotFoundException(Constants.COMMENT_NOT_FOUND_IN_ANSWER);
         }
     }
 }
