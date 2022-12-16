@@ -26,14 +26,15 @@ public class QuestionSearchServiceImpl implements QuestionSearchService {
     @Override
     public List<Question> search(String title, Set<String> tags, String filter) {
         List<Question> questions = questionRepository.findBySimilarity(title);
-        if (tags != null && !tags.isEmpty())
-        {
+        if (tags != null && !tags.isEmpty()) {
             questions = questions.stream()
                     .filter(question -> question.getTags().stream().anyMatch(tags::contains))
                     .collect(Collectors.toList());
         }
 
-        questions = updateQuestionsByFilter(questions, filter);
+        if (!title.isEmpty() && !NEW.equals(filter)) {
+            questions = updateQuestionsByFilter(questions, filter);
+        }
         return questions;
     }
 
@@ -43,7 +44,7 @@ public class QuestionSearchServiceImpl implements QuestionSearchService {
             throw new BadRequestException("Invalid filter.");
         }
 
-        List<Question> newQuestions = new ArrayList<Question>(questions);
+        List<Question> newQuestions = new ArrayList<>(questions);
         if (VOTE.equals(filter)) newQuestions = updateQuestionsByVote(questions);
         else if (RELEVANT.equals(filter)) newQuestions = updateQuestionsByRelevance(questions);
         else if (ANSWERED.equals(filter)) newQuestions = updateQuestionsByAnswers(questions);
