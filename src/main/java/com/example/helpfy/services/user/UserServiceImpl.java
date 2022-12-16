@@ -6,6 +6,8 @@ import com.example.helpfy.exceptions.NotFoundException;
 import com.example.helpfy.models.User;
 import com.example.helpfy.repositories.UserRepository;
 import com.example.helpfy.services.encoder.Encoder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -73,5 +75,12 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(Long id) {
         var user = getUserById(id);
         userRepository.delete(user);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return userRepository.findByEmail(email).orElseThrow(() -> {
+            throw new NotFoundException(Constants.USER_NOT_FOUND);
+        });
     }
 }
