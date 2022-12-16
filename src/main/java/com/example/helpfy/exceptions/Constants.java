@@ -16,6 +16,6 @@ public class Constants {
 
     public static final String INVALID_PASSWORD = "Senha inválida.";
     public static final String COMMENT_NOT_FOUND_IN_ANSWER = "Comentário não encontrado na resposta.";
-    public static final String COMMENT_NOT_FOUND_IN_QUESTION = "Comentário não encontrado na pergunta";
+    public static final String COMMENT_NOT_FOUND_IN_QUESTION = "Comentário não encontrado na pergunta.";
 
 }
