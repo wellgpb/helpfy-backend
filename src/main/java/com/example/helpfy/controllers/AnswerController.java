@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/answers")
+@CrossOrigin
 public class AnswerController {
     private final AnswerService answerService;
     private final UserService userService;
