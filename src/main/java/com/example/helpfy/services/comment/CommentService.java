@@ -11,13 +11,13 @@ public interface CommentService {
     Comment addCommentAnswer(Comment comment, User user, Answer answer);
     Comment getCommentAnswer(Long commentId, Answer answer);
     List<Comment> getAllCommentsAnswer(Answer answer);
-    Comment updateCommentAnswer(Comment comment, Long commentId, Answer answerId);
+    Comment updateCommentAnswer(Comment comment, Long commentId, Answer answer);
 
     Comment deleteCommentAnswer(Long commentId, Answer answer);
     Comment addCommentQuestion(Comment comment, User user, Question question);
     Comment getCommentQuestion(Long commentId, Question question);
-    List<Comment> getAllCommentsQuestion(Long questionId);
-    Comment updateCommentQuestion(Comment comment, Long commentId,Question question);
+    List<Comment> getAllCommentsQuestion(Question question);
+    Comment updateCommentQuestion(Comment comment, Long commentId, Question question);
 
     Comment deleteCommentQuestion(Long commentId, Question question);
 }

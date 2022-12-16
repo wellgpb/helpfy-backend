@@ -103,7 +103,8 @@ public class CommentController {
 
     @GetMapping("/questions/{questionId}")
     public ResponseEntity<List<CommentResponse>> getAllCommentsQuestion(@PathVariable    Long questionId){
-        List<Comment> comments = this.commentService.getAllCommentsQuestion(questionId);
+        Question question = questionService.getQuestionById(questionId);
+        List<Comment> comments = this.commentService.getAllCommentsQuestion(question);
         List<CommentResponse> commentsResponse = comments.stream()
                 .map(commentMapper::fromComment)
                 .collect(Collectors.toList());

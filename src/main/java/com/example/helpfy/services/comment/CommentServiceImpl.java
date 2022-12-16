@@ -88,11 +88,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<Comment> getAllCommentsQuestion(Long questionId) {
-        Question question = questionRepository.findById(questionId).orElseThrow(() -> {
-            throw new NotFoundException(Constants.QUESTION_NOT_FOUND);
-        });
-
+    public List<Comment> getAllCommentsQuestion(Question question) {
         return question.getComments();
     }
 
