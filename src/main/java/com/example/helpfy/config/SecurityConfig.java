@@ -23,6 +23,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserService userDetailService;
 
+    private static final String[] SWAGGER_AUTH_WHITE_LIST = {
+            // -- swagger ui
+            "/v2/api-docs",
+            "/v3/api-docs",
+            "/swagger-resources/**",
+            "/swagger-ui/**",
+    };
+
     public SecurityConfig(JwtFilter jwtFilter, UserService userDetailService) {
         this.jwtFilter = jwtFilter;
         this.userDetailService = userDetailService;
@@ -32,6 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.httpBasic().disable();
         http.csrf().disable().authorizeRequests()
+                .antMatchers(SWAGGER_AUTH_WHITE_LIST).permitAll()
                 .antMatchers("/login").permitAll()
                 .antMatchers(HttpMethod.POST,"/users/**").permitAll()
                 .antMatchers("/search").permitAll()
@@ -43,7 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 //        http.cors().configurationSource(corsConfigurationSource());
     }
-
+    
     @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {

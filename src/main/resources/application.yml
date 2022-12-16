@@ -12,6 +12,8 @@ spring:
       mode: always
   mvc:
     static-path-pattern: /pictures/**
+    pathmatch:
+      matching-strategy: ant_path_matcher
   web:
     resources:
       static-locations: file:pictures/
