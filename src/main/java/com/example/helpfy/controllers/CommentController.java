@@ -50,6 +50,12 @@ public class CommentController {
 
     }
 
+    @DeleteMapping("{commentId}/answers/{answerId}")
+    public ResponseEntity<Comment> deleteCommentAnswer(@PathVariable Long commentId, @PathVariable Long answerId){
+        Comment commentResult = this.commentService.deleteCommentAnswer(commentId, answerId);
+        return new ResponseEntity<>(commentResult, HttpStatus.OK);
+    }
+
     @PostMapping("/questions/{questionId}/users/{userId}")
     public  ResponseEntity<CommentResponse> addCommentQuestion(@RequestBody CommentRequest commentRequest, @PathVariable Long userId, @PathVariable     Long questionId){
         Comment comment = commentMapper.toCommentPOST(commentRequest);
@@ -73,5 +79,10 @@ public class CommentController {
                 .map(commentMapper::fromComment)
                 .collect(Collectors.toList());
         return new ResponseEntity<>(commentsResponse,HttpStatus.OK);
+    }
+    @DeleteMapping("{commentId}/questions/{questionId}")
+    public ResponseEntity<Comment> deleteCommentQuestion(@PathVariable Long commentId, @PathVariable    Long questionId){
+        Comment commentResult = this.commentService.deleteCommentQuestion(commentId, questionId);
+        return new ResponseEntity<>(commentResult, HttpStatus.OK);
     }
 }

@@ -56,7 +56,7 @@ public class CommentServiceImpl implements CommentService{
         });
 
         if (!answer.getComments().contains(comment)){
-            throw new NotFoundException(Constants.COMMENT_NOT_FOUND);
+            throw new NotFoundException(Constants.COMMENT_NOT_FOUND_IN_ANSWER);
         }
 
         return comment;
@@ -69,6 +69,25 @@ public class CommentServiceImpl implements CommentService{
         });
 
         return answer.getComments();
+    }
+
+    @Override
+    public Comment deleteCommentAnswer(Long commentId, Long answerId) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> {
+            throw new NotFoundException(Constants.COMMENT_NOT_FOUND);
+        });
+        Answer answer = answerRepository.findById(answerId).orElseThrow(() -> {
+            throw new NotFoundException(Constants.ANSWER_NOT_FOUND);
+        });
+
+        if (!answer.getComments().contains(comment)){
+            throw new NotFoundException(Constants.COMMENT_NOT_FOUND_IN_ANSWER);
+        }
+
+        answer.getComments().remove(comment);
+        answerRepository.save(answer);
+        commentRepository.delete(comment);
+        return comment;
     }
 
     public Comment addCommentQuestion(Comment comment, Long userId, Long questionId) {
@@ -97,7 +116,7 @@ public class CommentServiceImpl implements CommentService{
         });
 
         if (!question.getComments().contains(comment)){
-            throw new NotFoundException(Constants.COMMENT_NOT_FOUND);
+            throw new NotFoundException(Constants.COMMENT_NOT_FOUND_IN_QUESTION);
         }
 
         return comment;
@@ -110,6 +129,25 @@ public class CommentServiceImpl implements CommentService{
         });
 
         return question.getComments();
+    }
+
+    @Override
+    public Comment deleteCommentQuestion(Long commentId, Long questionId) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> {
+            throw new NotFoundException(Constants.COMMENT_NOT_FOUND);
+        });
+        Question question = questionRepository.findById(questionId).orElseThrow(() -> {
+            throw new NotFoundException(Constants.QUESTION_NOT_FOUND);
+        });
+
+        if (!question.getComments().contains(comment)){
+            throw new NotFoundException(Constants.COMMENT_NOT_FOUND_IN_QUESTION);
+        }
+
+        question.getComments().remove(comment);
+        questionRepository.save(question);
+        commentRepository.delete(comment);
+        return comment;
     }
 
 }
