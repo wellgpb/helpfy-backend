@@ -113,7 +113,7 @@ public class CommentController {
     @PutMapping("{commentId}/questions/{questionId}")
     public ResponseEntity<CommentResponse> updateCommentQuestion(@RequestBody CommentRequest commentRequest, @PathVariable Long commentId, @PathVariable   Long questionId){
         var comment = this.commentMapper.toCommentPUT(commentRequest);
-        Question question = this.questionService.getQuestionById(questionId);
+        var question = this.questionService.getQuestionById(questionId);
         var commentResult = this.commentService.updateCommentQuestion(comment, commentId, question);
         var commentResponse = this.commentMapper.fromComment(commentResult);
         return new ResponseEntity<>(commentResponse, HttpStatus.OK);

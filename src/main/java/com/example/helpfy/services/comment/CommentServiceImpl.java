@@ -34,15 +34,15 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Comment addCommentAnswer(Comment comment, User user, Answer answer) {
         comment.setAuthor(user);
-        commentRepository.save(comment);
+        this.commentRepository.save(comment);
         answer.getComments().add(comment);
-        answerRepository.save(answer);
+        this.answerRepository.save(answer);
         return comment;
     }
 
     @Override
     public Comment getCommentAnswer(Long commentId, Answer answer) {
-        Comment comment = findById(commentId, commentRepository, Constants.COMMENT_NOT_FOUND);
+        var comment = findById(commentId, this.commentRepository, Constants.COMMENT_NOT_FOUND);
         this.checkIfEntityHasComment(answer.getComments(), comment);
         return comment;
     }
@@ -55,36 +55,36 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     @Override
     public Comment updateCommentAnswer(Comment comment, Long commentId, Answer answer) {
-        Comment originalComment = findById(commentId, commentRepository, Constants.COMMENT_NOT_FOUND);
+        var originalComment = findById(commentId, this.commentRepository, Constants.COMMENT_NOT_FOUND);
         this.checkIfEntityHasComment(answer.getComments(), originalComment);
         originalComment.setBody(comment.getBody());
-        commentRepository.save(originalComment);
+        this.commentRepository.save(originalComment);
         return originalComment;
     }
 
     @Transactional
     @Override
     public void deleteCommentAnswer(Long commentId, Answer answer) {
-        Comment comment = findById(commentId, commentRepository, Constants.COMMENT_NOT_FOUND);
+        var comment = findById(commentId, this.commentRepository, Constants.COMMENT_NOT_FOUND);
         answer.getComments().remove(comment);
-        answerRepository.save(answer);
-        commentRepository.delete(comment);
+        this.answerRepository.save(answer);
+        this.commentRepository.delete(comment);
     }
 
     @Override
     @Transactional
     public Comment addCommentQuestion(Comment comment, User user, Question question) {
         comment.setAuthor(user);
-        commentRepository.save(comment);
+        this.commentRepository.save(comment);
         question.getComments().add(comment);
-        questionRepository.save(question);
+        this.questionRepository.save(question);
 
         return comment;
     }
 
     @Override
     public Comment getCommentQuestion(Long commentId, Question question) {
-        Comment comment = findById(commentId, commentRepository, Constants.COMMENT_NOT_FOUND);
+        var comment = findById(commentId, this.commentRepository, Constants.COMMENT_NOT_FOUND);
         this.checkIfEntityHasComment(question.getComments(), comment);
         return comment;
     }
@@ -97,20 +97,20 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     @Override
     public Comment updateCommentQuestion(Comment comment, Long commentId, Question question) {
-        Comment originalComment = findById(commentId, commentRepository, Constants.COMMENT_NOT_FOUND);
+        var originalComment = findById(commentId, this.commentRepository, Constants.COMMENT_NOT_FOUND);
         this.checkIfEntityHasComment(question.getComments(), originalComment);
         originalComment.setBody(comment.getBody());
-        commentRepository.save(originalComment);
+        this.commentRepository.save(originalComment);
         return originalComment;
     }
 
     @Override
     @Transactional
     public void deleteCommentQuestion(Long commentId, Question question) {
-        Comment comment = findById(commentId, commentRepository, Constants.COMMENT_NOT_FOUND);
+        var comment = findById(commentId, this.commentRepository, Constants.COMMENT_NOT_FOUND);
         question.getComments().remove(comment);
-        questionRepository.save(question);
-        commentRepository.delete(comment);
+        this.questionRepository.save(question);
+        this.commentRepository.delete(comment);
     }
 
     private void checkIfEntityHasComment(List<Comment> comments, Comment comment) {
