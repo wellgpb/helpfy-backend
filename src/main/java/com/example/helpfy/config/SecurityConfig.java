@@ -46,7 +46,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.httpBasic().disable();
         http.csrf().disable().authorizeRequests()
                 .antMatchers(SWAGGER_AUTH_WHITE_LIST).permitAll()
                 .antMatchers("/login").permitAll()
