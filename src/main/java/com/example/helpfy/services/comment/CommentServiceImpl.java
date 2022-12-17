@@ -64,12 +64,11 @@ public class CommentServiceImpl implements CommentService {
 
     @Transactional
     @Override
-    public Comment deleteCommentAnswer(Long commentId, Answer answer) {
+    public void deleteCommentAnswer(Long commentId, Answer answer) {
         Comment comment = findById(commentId, commentRepository, Constants.COMMENT_NOT_FOUND);
         answer.getComments().remove(comment);
         answerRepository.save(answer);
         commentRepository.delete(comment);
-        return comment;
     }
 
     @Override
@@ -107,12 +106,11 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public Comment deleteCommentQuestion(Long commentId, Question question) {
+    public void deleteCommentQuestion(Long commentId, Question question) {
         Comment comment = findById(commentId, commentRepository, Constants.COMMENT_NOT_FOUND);
         question.getComments().remove(comment);
         questionRepository.save(question);
         commentRepository.delete(comment);
-        return comment;
     }
 
     private void checkIfEntityHasComment(List<Comment> comments, Comment comment) {
