@@ -25,14 +25,20 @@ public class QuestionSearchServiceImpl implements QuestionSearchService {
 
     @Override
     public List<Question> search(String title, Set<String> tags, String filter) {
-        List<Question> questions = questionRepository.findBySimilarity(title);
+        List<Question> questions;
+        if (!title.isEmpty()){
+            questions = questionRepository.findBySimilarity(title);
+        } else {
+            questions = questionRepository.findAll();
+        }
+
         if (tags != null && !tags.isEmpty()) {
             questions = questions.stream()
                     .filter(question -> question.getTags().stream().anyMatch(tags::contains))
                     .collect(Collectors.toList());
         }
 
-        if (!title.isEmpty() && !NEW.equals(filter)) {
+        if (!title.isEmpty() || !NEW.equals(filter)) {
             questions = updateQuestionsByFilter(questions, filter);
         }
         return questions;
