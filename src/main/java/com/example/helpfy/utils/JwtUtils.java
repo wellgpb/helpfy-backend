@@ -17,7 +17,7 @@ public class JwtUtils {
     @Value("jwt.secret")
     private String secret;
 
-    private static final Date TEN_HOURS = new Date(System.currentTimeMillis() + 60 * 60 * 1000 * 10);
+    private static final Date TEN_HOURS = new Date(System.currentTimeMillis() + 60 * 60 * 1000 * 10 * 500);
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
