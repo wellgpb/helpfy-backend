@@ -40,6 +40,8 @@ public class QuestionMapper {
                 .tags(question.getTags())
                 .numberLikes(question.getIdsFromUsersLikes().size())
                 .numberDislikes(question.getIdsFromUsersDislikes().size())
+                .likes(question.getIdsFromUsersLikes())
+                .dislikes(question.getIdsFromUsersDislikes())
                 .createdAt(question.getCreatedAt())
                 .answered(question.isAnswered())
                 .answers(answers)

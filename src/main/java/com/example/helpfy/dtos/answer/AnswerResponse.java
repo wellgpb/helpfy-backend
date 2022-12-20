@@ -7,6 +7,7 @@ import lombok.Data;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Builder
@@ -17,6 +18,8 @@ public class AnswerResponse {
     private List<Comment> comments;
     private int numberLikes;
     private int numberDislikes;
+    private Set<Long> likes;
+    private Set<Long> dislikes;
     private Date postDate;
     private boolean solution;
 }
