@@ -23,6 +23,8 @@ public class QuestionResponse {
     private String title;
     private int numberLikes;
     private int numberDislikes;
+    private Set<Long> likes;
+    private Set<Long> dislikes;
     private Date createdAt;
     private boolean answered;
 }

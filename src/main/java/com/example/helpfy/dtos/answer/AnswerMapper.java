@@ -26,6 +26,8 @@ public class AnswerMapper {
                 .comments(answer.getComments())
                 .numberLikes(answer.getIdsFromUsersLikes().size())
                 .numberDislikes(answer.getIdsFromUsersDislikes().size())
+                .likes(answer.getIdsFromUsersLikes())
+                .dislikes(answer.getIdsFromUsersDislikes())
                 .solution(answer.isSolution())
                 .author(author)
                 .build();
