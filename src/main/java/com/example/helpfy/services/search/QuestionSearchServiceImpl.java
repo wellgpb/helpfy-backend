@@ -38,7 +38,7 @@ public class QuestionSearchServiceImpl implements QuestionSearchService {
                     .collect(Collectors.toList());
         }
 
-        if (!title.isEmpty() || !NEW.equals(filter)) {
+        if ((!title.isEmpty() && !NEW.equals(filter)) || title.isEmpty()) {
             questions = updateQuestionsByFilter(questions, filter);
         }
         return questions;
