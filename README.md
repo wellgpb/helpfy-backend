@@ -1,5 +1,5 @@
 # helpfy-backend
- Helpfy application backend.
+ Helpfy application backend
 
 ## How to run
 
