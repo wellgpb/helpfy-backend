@@ -3,10 +3,10 @@ package com.example.helpfy.services.answer;
 import com.example.helpfy.exceptions.Constants;
 import com.example.helpfy.exceptions.NotFoundException;
 import com.example.helpfy.models.Answer;
-import com.example.helpfy.models.Question;
 import com.example.helpfy.models.User;
 import com.example.helpfy.repositories.AnswerRepository;
 import com.example.helpfy.repositories.QuestionRepository;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,8 +24,8 @@ public class AnswerServiceImpl implements AnswerService {
     }
 
     @Override
-    public List<Answer> getUserAnswers(User user) {
-        return answerRepository.findAnswersByAuthor(user);
+    public List<Answer> getUserAnswers(User user, Pageable pageable) {
+        return answerRepository.findAnswersByAuthor(user, pageable);
     }
 
     @Override

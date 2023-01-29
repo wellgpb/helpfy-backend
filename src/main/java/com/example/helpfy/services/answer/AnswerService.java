@@ -2,11 +2,12 @@ package com.example.helpfy.services.answer;
 
 import com.example.helpfy.models.Answer;
 import com.example.helpfy.models.User;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface AnswerService {
-    List<Answer> getUserAnswers(User user);
+    List<Answer> getUserAnswers(User user, Pageable pageable);
 
     Answer getAnswerById(Long answerId);
 
