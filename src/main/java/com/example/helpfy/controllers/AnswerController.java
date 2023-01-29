@@ -1,17 +1,19 @@
 package com.example.helpfy.controllers;
 
+import com.example.helpfy.dtos.PageResponse;
 import com.example.helpfy.dtos.answer.AnswerMapper;
 import com.example.helpfy.dtos.answer.AnswerRequest;
 import com.example.helpfy.dtos.answer.AnswerResponse;
-import com.example.helpfy.dtos.question.QuestionResponse;
 import com.example.helpfy.services.answer.AnswerService;
 import com.example.helpfy.services.user.UserService;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
@@ -29,13 +31,18 @@ public class AnswerController {
     }
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<List<AnswerResponse>> getUserAnswers(@PathVariable Long id) {
+    public ResponseEntity<PageResponse<AnswerResponse>> getUserAnswers(@PathVariable Long id,
+                                                               @RequestParam(defaultValue = "0") int page,
+                                                               @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
         var user = userService.getUserById(id);
-        var answers = answerService.getUserAnswers(user);
+        var answers = answerService.getUserAnswers(user, pageable);
         var answersResponse = answers.stream()
                 .map(answerMapper::fromAnswer)
                 .collect(Collectors.toList());
-        return new ResponseEntity<>(answersResponse, HttpStatus.OK);
+
+        var pageResponse = new PageResponse<>(new PageImpl<>(answersResponse, pageable, answersResponse.size()));
+        return new ResponseEntity<>(pageResponse, HttpStatus.OK);
     }
 
     @GetMapping("/{answerId}")
