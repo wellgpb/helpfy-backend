@@ -1,5 +1,6 @@
 package com.example.helpfy.services.search;
 
+import com.example.helpfy.dtos.SearchQuestionsDTO;
 import com.example.helpfy.exceptions.BadRequestException;
 import com.example.helpfy.models.Question;
 import com.example.helpfy.repositories.QuestionRepository;
@@ -25,25 +26,26 @@ public class QuestionSearchServiceImpl implements QuestionSearchService {
     private QuestionRepository questionRepository;
 
     @Override
-    public List<Question> search(String title, Set<String> tags, String filter, Pageable pageable) {
-        Page<Question> pageObj;
+    public SearchQuestionsDTO search(String title, Set<String> tags, String filter, Pageable pageable) {
+        Page<Question> questions;
         if (!title.isEmpty()){
-            pageObj = questionRepository.findBySimilarity(title, pageable);
+            questions = questionRepository.findBySimilarity(title, pageable);
         } else {
-            pageObj = questionRepository.findAll(pageable);
+            questions = questionRepository.findAll(pageable);
         }
 
-        List<Question> questions = pageObj.getContent();
+        List<Question> questionsCopy = new ArrayList<>(questions.getContent());
         if (tags != null && !tags.isEmpty()) {
-            questions = questions.stream()
+            questionsCopy = questionsCopy.stream()
                     .filter(question -> question.getTags().stream().anyMatch(tags::contains))
                     .collect(Collectors.toList());
         }
 
         if ((!title.isEmpty() && !NEW.equals(filter)) || title.isEmpty()) {
-            questions = updateQuestionsByFilter(questions, filter);
+            questionsCopy = updateQuestionsByFilter(questionsCopy, filter);
         }
-        return questions;
+
+        return new SearchQuestionsDTO(questionsCopy, questions.getTotalElements());
     }
 
     private List<Question> updateQuestionsByFilter(List<Question> questions, String filter) {

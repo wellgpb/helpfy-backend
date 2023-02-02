@@ -33,11 +33,12 @@ public class QuestionSearchController {
                                                          @RequestParam(defaultValue = "10") int size) {
 
         Pageable pageable = PageRequest.of(page, size);
-        var questions = questionSearchService.search(title, tags, filter.toLowerCase(), pageable).stream()
+        var searchDTO = questionSearchService.search(title, tags, filter.toLowerCase(), pageable);
+        var questions = searchDTO.getQuestions().stream()
                 .map(question -> questionMapper.fromQuestionToResponse(question))
                 .collect(Collectors.toList());
 
-        var pageResponse = new PageResponse<>(new PageImpl<>(questions, pageable, questions.size()));
+        var pageResponse = new PageResponse<>(new PageImpl<>(questions, pageable, searchDTO.getTotalElements()));
         return new ResponseEntity<>(pageResponse, HttpStatus.OK);
     }
 

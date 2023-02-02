@@ -38,14 +38,12 @@ public class QuestionController {
                                                                                @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
         var user = userService.getUserById(userId);
-        var questions = questionService.getQuestionsByAuthor(user, pageable);
-
-        var questionsResponse = questions.stream()
+        var pageQuestions = questionService.getQuestionsByAuthor(user, pageable);
+        var questionsResponse = pageQuestions.getContent().stream()
                 .map(questionMapper::fromQuestionToResponse)
                 .collect(Collectors.toList());
 
-        var pageResponse = new PageResponse<>(new PageImpl<>(questionsResponse, pageable, questionsResponse.size()));
-
+        var pageResponse = new PageResponse<>(new PageImpl<>(questionsResponse, pageable, pageQuestions.getTotalElements()));
         return new ResponseEntity<>(pageResponse, HttpStatus.OK);
     }
 

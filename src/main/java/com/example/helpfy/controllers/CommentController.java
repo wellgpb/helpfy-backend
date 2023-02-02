@@ -1,6 +1,5 @@
 package com.example.helpfy.controllers;
 
-import com.example.helpfy.dtos.PageResponse;
 import com.example.helpfy.dtos.comment.CommentMapper;
 import com.example.helpfy.dtos.comment.CommentRequest;
 import com.example.helpfy.dtos.comment.CommentResponse;
@@ -8,13 +7,11 @@ import com.example.helpfy.services.answer.AnswerService;
 import com.example.helpfy.services.comment.CommentService;
 import com.example.helpfy.services.question.QuestionService;
 import com.example.helpfy.services.user.UserService;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
@@ -37,7 +34,7 @@ public class CommentController {
     }
 
     @PostMapping("/answers/{answerId}/users/{userId}")
-    public ResponseEntity<CommentResponse> addCommentAnswer(@RequestBody CommentRequest commentRequest, @PathVariable Long userId, @PathVariable Long answerId){
+    public ResponseEntity<CommentResponse> addCommentAnswer(@RequestBody CommentRequest commentRequest, @PathVariable Long userId, @PathVariable Long answerId) {
         var user = this.userService.getUserById(userId);
         var answer = this.answerService.getAnswerById(answerId);
         var comment = this.commentMapper.toCommentPOST(commentRequest);
@@ -47,7 +44,7 @@ public class CommentController {
     }
 
     @GetMapping("{commentId}/answers/{answerId}")
-    public ResponseEntity<CommentResponse> getCommentAnswer(@PathVariable Long commentId, @PathVariable Long answerId){
+    public ResponseEntity<CommentResponse> getCommentAnswer(@PathVariable Long commentId, @PathVariable Long answerId) {
         var answer = this.answerService.getAnswerById(answerId);
         var commentResult = this.commentService.getCommentAnswer(commentId, answer);
         var commentResponse = this.commentMapper.fromComment(commentResult);
@@ -55,30 +52,25 @@ public class CommentController {
     }
 
     @GetMapping("/answers/{answerId}")
-    public ResponseEntity<PageResponse<CommentResponse>> getAllCommentsAnswer(@PathVariable Long answerId,
-                                                                      @RequestParam(defaultValue = "0") int page,
-                                                                      @RequestParam(defaultValue = "10") int size){
-        Pageable pageable = PageRequest.of(page, size);
+    public ResponseEntity<List<CommentResponse>> getAllCommentsAnswer(@PathVariable Long answerId) {
         var answer = this.answerService.getAnswerById(answerId);
-        var comments = this.commentService.getAllCommentsAnswer(answer);
-        var commentsResponse = comments.stream()
+        var commentsResponse = this.commentService.getAllCommentsAnswer(answer).stream()
                 .map(this.commentMapper::fromComment)
                 .collect(Collectors.toList());
 
-        var pageResponse = new PageResponse<>(new PageImpl<>(commentsResponse, pageable, commentsResponse.size()));
-        return new ResponseEntity<>(pageResponse,HttpStatus.OK);
+        return new ResponseEntity<>(commentsResponse, HttpStatus.OK);
 
     }
 
     @DeleteMapping("{commentId}/answers/{answerId}")
-    public ResponseEntity<Void> deleteCommentAnswer(@PathVariable Long commentId, @PathVariable Long answerId){
+    public ResponseEntity<Void> deleteCommentAnswer(@PathVariable Long commentId, @PathVariable Long answerId) {
         var answer = this.answerService.getAnswerById(answerId);
         this.commentService.deleteCommentAnswer(commentId, answer);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping("{commentId}/answers/{answerId}")
-    public ResponseEntity<CommentResponse> updateCommentAnswer(@RequestBody CommentRequest commentRequest, @PathVariable Long commentId, @PathVariable Long answerId){
+    public ResponseEntity<CommentResponse> updateCommentAnswer(@RequestBody CommentRequest commentRequest, @PathVariable Long commentId, @PathVariable Long answerId) {
         var comment = this.commentMapper.toCommentPUT(commentRequest);
         var answer = this.answerService.getAnswerById(answerId);
         var commentResult = this.commentService.updateCommentAnswer(comment, commentId, answer);
@@ -87,7 +79,7 @@ public class CommentController {
     }
 
     @PostMapping("/questions/{questionId}/users/{userId}")
-    public  ResponseEntity<CommentResponse> addCommentQuestion(@RequestBody CommentRequest commentRequest, @PathVariable Long userId, @PathVariable Long questionId){
+    public ResponseEntity<CommentResponse> addCommentQuestion(@RequestBody CommentRequest commentRequest, @PathVariable Long userId, @PathVariable Long questionId) {
         var comment = this.commentMapper.toCommentPOST(commentRequest);
         var user = this.userService.getUserById(userId);
         var question = this.questionService.getQuestionById(questionId);
@@ -97,7 +89,7 @@ public class CommentController {
     }
 
     @GetMapping("{commentId}/questions/{questionId}")
-    public ResponseEntity<CommentResponse> getCommentQuestion(@PathVariable Long commentId, @PathVariable Long questionId){
+    public ResponseEntity<CommentResponse> getCommentQuestion(@PathVariable Long commentId, @PathVariable Long questionId) {
         var question = this.questionService.getQuestionById(questionId);
         var commentResult = this.commentService.getCommentQuestion(commentId, question);
         var commentResponse = this.commentMapper.fromComment(commentResult);
@@ -106,22 +98,17 @@ public class CommentController {
 
 
     @GetMapping("/questions/{questionId}")
-    public ResponseEntity<PageResponse<CommentResponse>> getAllCommentsQuestion(@PathVariable Long questionId,
-                                                                        @RequestParam(defaultValue = "0") int page,
-                                                                        @RequestParam(defaultValue = "10") int size){
-        Pageable pageable = PageRequest.of(page, size);
+    public ResponseEntity<List<CommentResponse>> getAllCommentsQuestion(@PathVariable Long questionId) {
         var question = this.questionService.getQuestionById(questionId);
-        var comments = this.commentService.getAllCommentsQuestion(question);
-        var commentsResponse = comments.stream()
+        var commentsResponse = this.commentService.getAllCommentsQuestion(question).stream()
                 .map(this.commentMapper::fromComment)
                 .collect(Collectors.toList());
 
-        var pageResponse = new PageResponse<>(new PageImpl<>(commentsResponse, pageable, commentsResponse.size()));
-        return new ResponseEntity<>(pageResponse,HttpStatus.OK);
+        return new ResponseEntity<>(commentsResponse, HttpStatus.OK);
     }
 
     @PutMapping("{commentId}/questions/{questionId}")
-    public ResponseEntity<CommentResponse> updateCommentQuestion(@RequestBody CommentRequest commentRequest, @PathVariable Long commentId, @PathVariable Long questionId){
+    public ResponseEntity<CommentResponse> updateCommentQuestion(@RequestBody CommentRequest commentRequest, @PathVariable Long commentId, @PathVariable Long questionId) {
         var comment = this.commentMapper.toCommentPUT(commentRequest);
         var question = this.questionService.getQuestionById(questionId);
         var commentResult = this.commentService.updateCommentQuestion(comment, commentId, question);
@@ -130,7 +117,7 @@ public class CommentController {
     }
 
     @DeleteMapping("{commentId}/questions/{questionId}")
-    public ResponseEntity<Void> deleteCommentQuestion(@PathVariable Long commentId, @PathVariable Long questionId){
+    public ResponseEntity<Void> deleteCommentQuestion(@PathVariable Long commentId, @PathVariable Long questionId) {
         var question = this.questionService.getQuestionById(questionId);
         this.commentService.deleteCommentQuestion(commentId, question);
         return new ResponseEntity<>(HttpStatus.OK);

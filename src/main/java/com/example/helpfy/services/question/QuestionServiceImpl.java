@@ -5,11 +5,11 @@ import com.example.helpfy.exceptions.NotFoundException;
 import com.example.helpfy.models.Question;
 import com.example.helpfy.models.User;
 import com.example.helpfy.repositories.QuestionRepository;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -103,8 +103,8 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public List<Question> getQuestionsByAuthor(User user, Pageable pageable) {
-        return questionRepository.findQuestionsByAuthor(user, pageable).getContent();
+    public Page<Question> getQuestionsByAuthor(User user, Pageable pageable) {
+        return questionRepository.findQuestionsByAuthor(user, pageable);
     }
 
     @Transactional
