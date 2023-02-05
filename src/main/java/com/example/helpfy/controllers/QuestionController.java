@@ -1,11 +1,15 @@
 package com.example.helpfy.controllers;
 
+import com.example.helpfy.dtos.PageResponse;
 import com.example.helpfy.dtos.question.QuestionMapper;
 import com.example.helpfy.dtos.question.QuestionRequest;
 import com.example.helpfy.dtos.question.QuestionRequestPUT;
 import com.example.helpfy.dtos.question.QuestionResponse;
 import com.example.helpfy.services.question.QuestionService;
 import com.example.helpfy.services.user.UserService;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,15 +33,18 @@ public class QuestionController {
     }
 
     @GetMapping("/users/{userId}")
-    public ResponseEntity<List<QuestionResponse>> getQuestionsByAuthor(@PathVariable Long userId) {
+    public ResponseEntity<PageResponse<QuestionResponse>> getQuestionsByAuthor(@PathVariable Long userId,
+                                                                               @RequestParam(defaultValue = "0") int page,
+                                                                               @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
         var user = userService.getUserById(userId);
-        var questions = questionService.getQuestionsByAuthor(user);
-
-        var questionsResponse = questions.stream()
+        var pageQuestions = questionService.getQuestionsByAuthor(user, pageable);
+        var questionsResponse = pageQuestions.getContent().stream()
                 .map(questionMapper::fromQuestionToResponse)
                 .collect(Collectors.toList());
 
-        return new ResponseEntity<>(questionsResponse, HttpStatus.OK);
+        var pageResponse = new PageResponse<>(new PageImpl<>(questionsResponse, pageable, pageQuestions.getTotalElements()));
+        return new ResponseEntity<>(pageResponse, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

@@ -1,14 +1,17 @@
 package com.example.helpfy.controllers;
 
+import com.example.helpfy.dtos.PageResponse;
 import com.example.helpfy.dtos.question.QuestionMapper;
 import com.example.helpfy.dtos.question.QuestionResponse;
 import com.example.helpfy.services.search.QuestionSearchService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -23,13 +26,20 @@ public class QuestionSearchController {
     private QuestionMapper questionMapper;
 
     @GetMapping
-    public ResponseEntity<List<QuestionResponse>> getAll(@RequestParam(defaultValue = "") String title,
+    public ResponseEntity<PageResponse<QuestionResponse>> getAll(@RequestParam(defaultValue = "") String title,
                                                          @RequestParam(required = false) Set<String> tags,
-                                                         @RequestParam(defaultValue = "new") String filter) {
-        var questions = questionSearchService.search(title, tags, filter.toLowerCase()).stream()
+                                                         @RequestParam(defaultValue = "new") String filter,
+                                                         @RequestParam(defaultValue = "0") int page,
+                                                         @RequestParam(defaultValue = "10") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        var searchDTO = questionSearchService.search(title, tags, filter.toLowerCase(), pageable);
+        var questions = searchDTO.getQuestions().stream()
                 .map(question -> questionMapper.fromQuestionToResponse(question))
                 .collect(Collectors.toList());
-        return new ResponseEntity<>(questions, HttpStatus.OK);
+
+        var pageResponse = new PageResponse<>(new PageImpl<>(questions, pageable, searchDTO.getTotalElements()));
+        return new ResponseEntity<>(pageResponse, HttpStatus.OK);
     }
 
 }

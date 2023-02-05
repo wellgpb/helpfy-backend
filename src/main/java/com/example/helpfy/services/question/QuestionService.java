@@ -2,8 +2,8 @@ package com.example.helpfy.services.question;
 
 import com.example.helpfy.models.Question;
 import com.example.helpfy.models.User;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface QuestionService {
     Question getQuestionById(Long id);
@@ -12,6 +12,6 @@ public interface QuestionService {
     void deleteQuestion(Long id);
     Question likeQuestion(Long questionId, Long userId);
     Question dislikeQuestion(Long questionId, Long userId);
-    List<Question> getQuestionsByAuthor(User user);
+    Page<Question> getQuestionsByAuthor(User user, Pageable pageable);
     Question toggleAnsweredStatus(Long questionId);
 }

@@ -3,7 +3,6 @@ package com.example.helpfy.controllers;
 import com.example.helpfy.dtos.answer.AnswerMapper;
 import com.example.helpfy.dtos.answer.AnswerRequest;
 import com.example.helpfy.dtos.answer.AnswerResponse;
-import com.example.helpfy.dtos.question.QuestionResponse;
 import com.example.helpfy.services.answer.AnswerService;
 import com.example.helpfy.services.user.UserService;
 import org.springframework.http.HttpStatus;
@@ -31,10 +30,10 @@ public class AnswerController {
     @GetMapping("/users/{id}")
     public ResponseEntity<List<AnswerResponse>> getUserAnswers(@PathVariable Long id) {
         var user = userService.getUserById(id);
-        var answers = answerService.getUserAnswers(user);
-        var answersResponse = answers.stream()
+        var answersResponse = answerService.getUserAnswers(user).stream()
                 .map(answerMapper::fromAnswer)
                 .collect(Collectors.toList());
+        
         return new ResponseEntity<>(answersResponse, HttpStatus.OK);
     }
 

@@ -3,7 +3,6 @@ package com.example.helpfy.services.answer;
 import com.example.helpfy.exceptions.Constants;
 import com.example.helpfy.exceptions.NotFoundException;
 import com.example.helpfy.models.Answer;
-import com.example.helpfy.models.Question;
 import com.example.helpfy.models.User;
 import com.example.helpfy.repositories.AnswerRepository;
 import com.example.helpfy.repositories.QuestionRepository;
