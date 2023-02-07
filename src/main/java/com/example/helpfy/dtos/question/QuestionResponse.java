@@ -2,7 +2,6 @@ package com.example.helpfy.dtos.question;
 
 import com.example.helpfy.dtos.answer.AnswerResponse;
 import com.example.helpfy.dtos.user.UserResponse;
-import com.example.helpfy.models.Answer;
 import com.example.helpfy.models.Comment;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,5 +25,5 @@ public class QuestionResponse {
     private Set<Long> likes;
     private Set<Long> dislikes;
     private Date createdAt;
-    private boolean answered;
+    private Boolean answered;
 }

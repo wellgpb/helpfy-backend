@@ -21,5 +21,5 @@ public class AnswerResponse {
     private Set<Long> likes;
     private Set<Long> dislikes;
     private Date postDate;
-    private boolean solution;
+    private Boolean solution;
 }
