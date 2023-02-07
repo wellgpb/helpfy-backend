@@ -14,4 +14,10 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
             nativeQuery = true)
     Page<Question> findBySimilarity(@Param("title") String title, Pageable pageable);
     Page<Question> findQuestionsByAuthor(User author, Pageable pageable);
+    Page<Question> findAllByOrderByCreatedAtDesc(Pageable pageable);
+    @Query("SELECT q FROM Question q ORDER BY SIZE(q.idsFromUsersLikes) DESC")
+    Page<Question> findAllOrderByVote(Pageable pageable);
+    @Query("SELECT q FROM Question q ORDER BY (SIZE(q.idsFromUsersLikes) - SIZE(q.idsFromUsersDislikes)) DESC")
+    Page<Question> findAllOrderByRelevance(Pageable pageable);
+    Page<Question> findByAnsweredTrue(Pageable pageable);
 }

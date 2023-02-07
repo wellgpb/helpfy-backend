@@ -6,6 +6,7 @@ import com.example.helpfy.models.Question;
 import com.example.helpfy.repositories.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -27,28 +28,26 @@ public class QuestionSearchServiceImpl implements QuestionSearchService {
 
     @Override
     public SearchQuestionsDTO search(String title, Set<String> tags, String filter, Pageable pageable) {
-        Page<Question> questions;
+        Page<Question> questions = new PageImpl<>(new ArrayList<>());
         if (!title.isEmpty()){
             questions = questionRepository.findBySimilarity(title, pageable);
         } else {
-            questions = questionRepository.findAll(pageable);
+            if (NEW.equals(filter)) {
+                questions = questionRepository.findAllByOrderByCreatedAtDesc(pageable);
+            } else if (VOTE.equals(filter)) {
+                questions = questionRepository.findAllOrderByVote(pageable);
+            } else if (RELEVANT.equals(filter)) {
+                questions = questionRepository.findAllOrderByRelevance(pageable);
+            } else if (ANSWERED.equals(filter)) {
+                questions = questionRepository.findByAnsweredTrue(pageable);
+            }
         }
 
-        List<Question> questionsCopy = new ArrayList<>(questions.getContent());
-        if (tags != null && !tags.isEmpty()) {
-            questionsCopy = questionsCopy.stream()
-                    .filter(question -> question.getTags().stream().anyMatch(tags::contains))
-                    .collect(Collectors.toList());
-        }
-
-        if ((!title.isEmpty() && !NEW.equals(filter)) || title.isEmpty()) {
-            questionsCopy = updateQuestionsByFilter(questionsCopy, filter);
-        }
-
-        return new SearchQuestionsDTO(questionsCopy, questions.getTotalElements());
+        return new SearchQuestionsDTO(questions.getContent(), questions.getTotalElements());
     }
 
-    private List<Question> updateQuestionsByFilter(List<Question> questions, String filter) {
+    private Page<Question> updateQuestionsByFilter(Page<Question> pageQuestions, String filter, Pageable pageable) {
+        List<Question> questions = pageQuestions.getContent();
         Set<String> validFilters = Set.of(VOTE, RELEVANT, ANSWERED, NEW);
         if (!validFilters.contains(filter)) {
             throw new BadRequestException("Invalid filter.");
@@ -60,7 +59,7 @@ public class QuestionSearchServiceImpl implements QuestionSearchService {
         else if (ANSWERED.equals(filter)) newQuestions = updateQuestionsByAnswers(questions);
         else if (NEW.equals(filter)) newQuestions = updateQuestionsByDate(questions);
 
-        return newQuestions;
+        return new PageImpl<>(questions, pageable, pageQuestions.getTotalElements());
     }
 
     private List<Question> updateQuestionsByVote(List<Question> questions) {
