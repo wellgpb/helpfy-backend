@@ -1,16 +1,16 @@
 services:
-  back:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - 8080:8080
-    depends_on:
-      - app-db
-    environment:
-      JDBC_DATABASE_URL: jdbc:postgresql://app-db:5432/postgres
-      JDBC_DATABASE_USERNAME: postgres
-      JDBC_DATABASE_PASSWORD: postgres
+#  back:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    ports:
+#      - 8080:8080
+#    depends_on:
+#      - app-db
+#    environment:
+#      JDBC_DATABASE_URL: jdbc:postgresql://app-db:5432/postgres
+#      JDBC_DATABASE_USERNAME: postgres
+#      JDBC_DATABASE_PASSWORD: postgres
   app-db:
     image: postgres:13.3
     environment:

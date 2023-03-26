@@ -5,4 +5,6 @@ import com.example.helpfy.dtos.auth.LoginResponse;
 
 public interface AuthService {
     LoginResponse auth(LoginRequest loginRequest);
+
+    String validateToken(String token);
 }
