@@ -49,6 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable().authorizeRequests()
                 .antMatchers(SWAGGER_AUTH_WHITE_LIST).permitAll()
                 .antMatchers("/login").permitAll()
+                .antMatchers("/login//oauth2").permitAll()
                 .antMatchers(HttpMethod.POST,"/users/**").permitAll()
                 .antMatchers("/search").permitAll()
                 .antMatchers("/pictures/**").permitAll()

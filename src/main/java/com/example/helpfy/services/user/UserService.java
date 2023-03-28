@@ -8,4 +8,6 @@ public interface UserService extends UserDetailsService {
     User saveUser(User user);
     User updateUser(Long id, User newUser);
     void deleteUser(Long id);
+
+    User getUserByEmail(String email);
 }
